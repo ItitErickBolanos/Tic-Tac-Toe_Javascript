@@ -6,12 +6,12 @@ var GUI_WIDTH = 400,
 function TTTGUI(size, aiplayer, aifunction, ntrials, reverse=False){
     // Game board
     this.size = size;
-    this.bar_spacing = GUI_WIDTH; // self._size
+    this.bar_spacing = Math.floor(GUI_WIDTH / this.size);
     this.turn = PLAYERX;
     this.reverse = reverse;
 
     // AI setup
-    this.humanplayer = switch_player(aiplayer)
+    this.humanplayer = switch_player(aiplayer);
     this.aiplayer = aiplayer;
     this.aifunction = aifunction;
     this.ntrials = ntrials;
@@ -37,11 +37,14 @@ TTTGUI.prototype = {
           that.draw();
         }, 1000/FPS);
 
+
         // Set handlers
-        $("#canvas").click(function(){
-            this.click();
+        $("#canvas").mousedown(function(event){
+          console.log(event);
+          that.click([event.clientX - 713, event.clientY - 59]);
         });
-        $("#canvas").parent().append("<button id='new_game' class='btn btn-warning'>New game</button>");
+
+        $("#canvas").parent().append("<div class='row'><button id='new_game' class='btn btn-warning'>New game</button></div>");
         $("#new_game").click(function(){
             this.newgame();
         });
@@ -49,11 +52,46 @@ TTTGUI.prototype = {
     },
 
     /*
+    Start new game.
+    */
+    newgame: function(){
+        this.board = new TTTBoard(this.size, this.reverse);
+        this.inprogress = true;
+        this.wait = false;
+        this.turn = PLAYERX;
+    },
+        //this.label.set_text("");
+
+    /*
+    Draw an X on the given canvas at the given position.
+    */
+    drawx: function(pos){
+        halfsize = .4 * this.bar_spacing;
+        this.frame.moveTo(pos[0] - halfsize, pos[1] - halfsize);
+        this.frame.lineTo(pos[0] + halfsize, pos[1] + halfsize);
+        this.frame.stroke();
+
+        this.frame.moveTo(pos[0] + halfsize, pos[1] - halfsize);
+        this.frame.lineTo(pos[0] - halfsize, pos[1] + halfsize);
+        this.frame.stroke();
+    },
+
+    /*
+    Draw an O on the given canvas at the given position.
+    */
+    drawo: function(pos){
+        halfsize = .4 * this.bar_spacing;
+        this.frame.beginPath();
+        this.frame.arc(pos[0], pos[1], 50, 0, 2*Math.PI);
+        this.frame.stroke();
+    },
+    /*
     Updates the tic-tac-toe GUI.
     */
     draw: function(){
         // Draw the '#' symbol
-        for (var i = GUI_WIDTH - 1; i < this.bar_spacing; i += ){
+        for (var i = this.bar_spacing; i < GUI_WIDTH - 1; i += this.bar_spacing){
+
             this.frame.moveTo(i, 0);
             this.frame.lineTo(i, GUI_HEIGHT);
             this.frame.stroke();
@@ -63,170 +101,107 @@ TTTGUI.prototype = {
             this.frame.stroke();
         }
 
-
         // Draw the current players' moves
-        /*for row in range(self._size):
-            for col in range(self._size):
-                symbol = self._board.square(row, col)
-                coords = self.get_coords_from_grid(row, col)
-                if symbol == provided.PLAYERX:
-                    self.drawx(canvas, coords)
-                elif symbol == provided.PLAYERO:
-                    self.drawo(canvas, coords)
-        */
+        for (var row = 0; row < this.size; row++) {
+            for (var col = 0; col < this.size; col++) {
+                symbol = this.board.square(row, col);
+                coords = this.get_coords_from_grid(row, col);
+                if (symbol == PLAYERX){
+                    this.drawx(coords);
+                } else {
+                  if (symbol == PLAYERO){
+                    this.drawo(coords);
+                  }
+                }
+            }
+        }
+
         // Run AI, if necessary
-        /*if not self._wait
-            self.aimove()
-        else:
-            self._wait = False*/
-    }
-}
+        if (!this.wait){
+          this.aimove();
+        } else {
+          this.wait = false;
+        }
+    },
 
-/*
+    /*
+    Make human move.
+    */
+    click: function(position){
+      /*x -= canvas.offsetLeft;
+      y -= canvas.offsetTop;¨*/
+      if (this.inprogress && (this.turn == this.humanplayer)){
+          pos = this.get_grid_from_coords(position);
+          console.log(pos);
+          console.log(this.board.square(pos[0], pos[1]));
+          if (this.board.square(pos[0], pos[1]) == EMPTY){
+              this.board.move(pos[0], pos[1], this.humanplayer);
+              this.turn = this.aiplayer;
+              winner = this.board.check_win();
+              if (winner != null){
+                  this.game_over(winner);
+              }
+              this.wait = true;
+          }
+      }
+    },
 
-    def setup_frame(self):
-        """
-        Create GUI frame and add handlers.
-        """
-        self._frame = simplegui.create_frame("Tic-Tac-Toe",
-                                             GUI_WIDTH,
-                                             GUI_HEIGHT)
-        self._frame.set_canvas_background('White')
+    /*
+    Make AI move.
+    */
+    aimove: function(){
+        if (this.inprogress && (this.turn == this.aiplayer)){
+            pos = this.aifunction(this.board, this.aiplayer,
+                                        this.ntrials);
+            if (this.board.square(pos[0], pos[1]) == EMPTY){
+                this.board.move(pos[0], pos[1], this.aiplayer);
+            }
+            this.turn = this.humanplayer;
+            winner = this.board.check_win();
+            if (winner != null){
+                this.game_over(winner);
+            }
+        }
+    },
 
-        # Set handlers
-        self._frame.set_draw_handler(self.draw)
-        self._frame.set_mouseclick_handler(self.click)
-        self._frame.add_button("New Game", self.newgame)
-        self._label = self._frame.add_label("")
+    /*
+    Game over
+    */
+    game_over: function(winner){
+        // Display winner
+        if (winner == DRAW) {
+            this.label = "It's a tie!";
+        } else {
+          if (winner == PLAYERX){
+            this.label = "X Wins!";
+          } else {
+            if (winner == PLAYERO){
+              this.label = "O Wins!";
+            }
+          }
+        }
 
-    def start(self):
-        """
-        Start the GUI.
-        """
-        self._frame.start()
+        // Game is no longer in progress
+        this.inprogress = false;
+    },
 
-    def newgame(self):
-        """
-        Start new game.
-        """
-        self._board = provided.TTTBoard(self._size, self._reverse)
-        self._inprogress = True
-        self._wait = False
-        self._turn = provided.PLAYERX
-        self._label.set_text("")
-
-    def drawx(self, canvas, pos):
-        """
-        Draw an X on the given canvas at the given position.
-        """
-        halfsize = .4 * self._bar_spacing
-        canvas.draw_line((pos[0]-halfsize, pos[1]-halfsize),
-                         (pos[0]+halfsize, pos[1]+halfsize),
-                         BAR_WIDTH, 'Black')
-        canvas.draw_line((pos[0]+halfsize, pos[1]-halfsize),
-                         (pos[0]-halfsize, pos[1]+halfsize),
-                         BAR_WIDTH, 'Black')
-
-    def drawo(self, canvas, pos):
-        """
-        Draw an O on the given canvas at the given position.
-        """
-        halfsize = .4 * self._bar_spacing
-        canvas.draw_circle(pos, halfsize, BAR_WIDTH, 'Black')
-
-    def draw(self, canvas):
-        """
-        Updates the tic-tac-toe GUI.
-        """
-        # Draw the '#' symbol
-        for bar_start in range(self._bar_spacing,
-                               GUI_WIDTH - 1,
-                               self._bar_spacing):
-            canvas.draw_line((bar_start, 0),
-                             (bar_start, GUI_HEIGHT),
-                             BAR_WIDTH,
-                             'Black')
-            canvas.draw_line((0, bar_start),
-                             (GUI_WIDTH, bar_start),
-                             BAR_WIDTH,
-                             'Black')
-
-        # Draw the current players' moves
-        for row in range(self._size):
-            for col in range(self._size):
-                symbol = self._board.square(row, col)
-                coords = self.get_coords_from_grid(row, col)
-                if symbol == provided.PLAYERX:
-                    self.drawx(canvas, coords)
-                elif symbol == provided.PLAYERO:
-                    self.drawo(canvas, coords)
-
-        # Run AI, if necessary
-        if not self._wait:
-            self.aimove()
-        else:
-            self._wait = False
-
-    def click(self, position):
-        """
-        Make human move.
-        """
-        if self._inprogress and (self._turn == self._humanplayer):
-            row, col = self.get_grid_from_coords(position)
-            if self._board.square(row, col) == provided.EMPTY:
-                self._board.move(row, col, self._humanplayer)
-                self._turn = self._aiplayer
-                winner = self._board.check_win()
-                if winner is not None:
-                    self.game_over(winner)
-                self._wait = True
-
-    def aimove(self):
-        """
-        Make AI move.
-        """
-        if self._inprogress and (self._turn == self._aiplayer):
-            row, col = self._aifunction(self._board,
-                                        self._aiplayer,
-                                        self._ntrials)
-            if self._board.square(row, col) == provided.EMPTY:
-                self._board.move(row, col, self._aiplayer)
-            self._turn = self._humanplayer
-            winner = self._board.check_win()
-            if winner is not None:
-                self.game_over(winner)
-
-    def game_over(self, winner):
-        """
-        Game over
-        """
-        # Display winner
-        if winner == provided.DRAW:
-            self._label.set_text("It's a tie!")
-        elif winner == provided.PLAYERX:
-            self._label.set_text("X Wins!")
-        elif winner == provided.PLAYERO:
-            self._label.set_text("O Wins!")
-
-        # Game is no longer in progress
-        self._inprogress = False
-
-    def get_coords_from_grid(self, row, col):
-        """
+    get_coords_from_grid: function(row, col){
+        /*
         Given a grid position in the form (row, col), returns
         the coordinates on the canvas of the center of the grid.
-        """
-        # X coordinate = (bar spacing) * (col + 1/2)
-        # Y coordinate = height - (bar spacing) * (row + 1/2)
-        return (self._bar_spacing * (col + 1.0/2.0), # x
-                self._bar_spacing * (row + 1.0/2.0)) # y
+        */
+        // X coordinate = (bar spacing) * (col + 1/2)
+        // Y coordinate = height - (bar spacing) * (row + 1/2)
+        return [this.bar_spacing * (col + 1/2), this.bar_spacing * (row + 1/2)]; // x, y
+    },
 
-    def get_grid_from_coords(self, position):
-        """
-        Given coordinates on a canvas, gets the indices of
-        the grid.
-        """
-        posx, posy = position
-        return (posy // self._bar_spacing, # row
-                posx // self._bar_spacing) # col
-*/
+    /*
+    Given coordinates on a canvas, gets the indices of
+    the grid.
+    */
+    get_grid_from_coords: function(position){
+        coord = position;
+        return [Math.floor(coord[1] / this.bar_spacing), Math.floor(coord[0] / this.bar_spacing)];
+    }
+
+}

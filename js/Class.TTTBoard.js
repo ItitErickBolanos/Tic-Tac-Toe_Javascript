@@ -42,9 +42,6 @@ function TTTBoard(dim, reverse = false, board = null){
 
         this.board = arr;
     }
-
-    console.log(this.board);
-    console.log(this.check_win());
 }
 
 TTTBoard.prototype = {
@@ -56,6 +53,7 @@ TTTBoard.prototype = {
     /*Returns one of the three constants EMPTY, PLAYERX, or PLAYERO
     that correspond to the contents of the board at position (row, col).*/
     square: function(row, col){
+      console.log(this.board);
         return this.board[row][col];
     },
 
@@ -211,60 +209,3 @@ function play_game(mc_move_function, ntrials, reverse = False){
         }
     }
 }
-
-/*
-EMPTY = 1
-PLAYERX = 2
-PLAYERO = 3
-DRAW = 4
-
-# Map player constants to letters for printing
-STRMAP = {EMPTY: " ",
-          PLAYERX: "X",
-          PLAYERO: "O"}
-
-def switch_player(player):
-    """
-    Convenience function to switch players.
-
-    Returns other player.
-    """
-    if player == PLAYERX:
-        return PLAYERO
-    else:
-        return PLAYERX
-
-def play_game(mc_move_function, ntrials, reverse = False):
-    """
-    Function to play a game with two MC players.
-    """
-    # Setup game
-    board = TTTBoard(3, reverse)
-    curplayer = PLAYERX
-    winner = None
-
-    # Run game
-    while winner == None:
-        # Move
-        row, col = mc_move_function(board, curplayer, ntrials)
-        board.move(row, col, curplayer)
-
-        # Update state
-        winner = board.check_win()
-        curplayer = switch_player(curplayer)
-
-        # Display board
-        print board
-        print
-
-    # Print winner
-    if winner == PLAYERX:
-        print "X wins!"
-    elif winner == PLAYERO:
-        print "O wins!"
-    elif winner == DRAW:
-        print "Tie!"
-    else:
-        print "Error: unknown winner"
-
-*/
