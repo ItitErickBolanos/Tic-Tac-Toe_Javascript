@@ -40,13 +40,12 @@ TTTGUI.prototype = {
 
         // Set handlers
         $("#canvas").mousedown(function(event){
-          console.log(event);
-          that.click([event.clientX - 713, event.clientY - 59]);
+          that.click([event.clientX - $(this).offset().left, event.clientY - $(this).offset().top]);
         });
 
         $("#canvas").parent().append("<div class='row'><button id='new_game' class='btn btn-warning'>New game</button></div>");
         $("#new_game").click(function(){
-            this.newgame();
+            that.newgame();
         });
         //this.label = this.frame.add_label("");
     },
@@ -132,8 +131,6 @@ TTTGUI.prototype = {
       y -= canvas.offsetTop;¨*/
       if (this.inprogress && (this.turn == this.humanplayer)){
           pos = this.get_grid_from_coords(position);
-          console.log(pos);
-          console.log(this.board.square(pos[0], pos[1]));
           if (this.board.square(pos[0], pos[1]) == EMPTY){
               this.board.move(pos[0], pos[1], this.humanplayer);
               this.turn = this.aiplayer;
@@ -151,8 +148,7 @@ TTTGUI.prototype = {
     */
     aimove: function(){
         if (this.inprogress && (this.turn == this.aiplayer)){
-            pos = this.aifunction(this.board, this.aiplayer,
-                                        this.ntrials);
+            pos = this.aifunction(this.board, this.aiplayer, this.ntrials);
             if (this.board.square(pos[0], pos[1]) == EMPTY){
                 this.board.move(pos[0], pos[1], this.aiplayer);
             }

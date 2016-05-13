@@ -53,7 +53,6 @@ TTTBoard.prototype = {
     /*Returns one of the three constants EMPTY, PLAYERX, or PLAYERO
     that correspond to the contents of the board at position (row, col).*/
     square: function(row, col){
-      console.log(this.board);
         return this.board[row][col];
     },
 
@@ -127,21 +126,19 @@ TTTBoard.prototype = {
         lines.push(diag2);
 
         // check all lines
-        for (line in lines) {
-            if (new Set(line).length == 1 && line[0] != EMPTY){
+        for (var i = 0; i < lines.length; i++) {
+            var setLine = new Set(lines[i]);
+            if (setLine.size == 1 && lines[i][0] != EMPTY){
                 if (this.reverse){
-                    console.log("SWITCH");
-                    return switch_player(line[0]);
+                    return switch_player(lines[i][0]);
                 } else {
-                    console.log("LINE");
-                    return line[0];
+                    return lines[i][0];
                 }
             }
         }
 
         // no winner, check for draw
         if (this.get_empty_squares().length == 0) {
-            console.log("DRAW");
             return DRAW;
         }
 
