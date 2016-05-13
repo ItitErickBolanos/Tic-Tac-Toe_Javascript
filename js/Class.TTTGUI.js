@@ -32,7 +32,7 @@ TTTGUI.prototype = {
 
         this.frame = document.getElementById("canvas").getContext("2d");
 
-        var FPS = 60;
+        var FPS = 30;
         setInterval(function() {
           that.draw();
         }, 1000/FPS);
@@ -58,6 +58,7 @@ TTTGUI.prototype = {
         this.inprogress = true;
         this.wait = false;
         this.turn = PLAYERX;
+        this.frame.clearRect(0, 0, $("#canvas").attr("width"), $("#canvas").attr("height"));
     },
         //this.label.set_text("");
 
@@ -66,13 +67,17 @@ TTTGUI.prototype = {
     */
     drawx: function(pos){
         halfsize = .4 * this.bar_spacing;
+        this.frame.beginPath();
         this.frame.moveTo(pos[0] - halfsize, pos[1] - halfsize);
         this.frame.lineTo(pos[0] + halfsize, pos[1] + halfsize);
         this.frame.stroke();
+        this.frame.closePath();
 
+        this.frame.beginPath();
         this.frame.moveTo(pos[0] + halfsize, pos[1] - halfsize);
         this.frame.lineTo(pos[0] - halfsize, pos[1] + halfsize);
         this.frame.stroke();
+        this.frame.closePath();
     },
 
     /*
@@ -83,7 +88,9 @@ TTTGUI.prototype = {
         this.frame.beginPath();
         this.frame.arc(pos[0], pos[1], 50, 0, 2*Math.PI);
         this.frame.stroke();
+        this.frame.closePath();
     },
+
     /*
     Updates the tic-tac-toe GUI.
     */
@@ -91,13 +98,17 @@ TTTGUI.prototype = {
         // Draw the '#' symbol
         for (var i = this.bar_spacing; i < GUI_WIDTH - 1; i += this.bar_spacing){
 
+            this.frame.beginPath();
             this.frame.moveTo(i, 0);
             this.frame.lineTo(i, GUI_HEIGHT);
             this.frame.stroke();
+            this.frame.closePath();
 
+            this.frame.beginPath();
             this.frame.moveTo(0, i);
             this.frame.lineTo(GUI_WIDTH, i);
             this.frame.stroke();
+            this.frame.closePath();
         }
 
         // Draw the current players' moves
