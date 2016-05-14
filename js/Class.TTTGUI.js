@@ -35,7 +35,7 @@ TTTGUI.prototype = {
         var FPS = 30;
         setInterval(function() {
           that.draw();
-        }, 1000/FPS);
+      }, 1000/FPS);
 
 
         // Set handlers
@@ -58,7 +58,9 @@ TTTGUI.prototype = {
         this.inprogress = true;
         this.wait = false;
         this.turn = PLAYERX;
+        this.label = "Game in progress";
         this.frame.clearRect(0, 0, $("#canvas").attr("width"), $("#canvas").attr("height"));
+        $("#canvas").parents(".panel").find(".panel-footer").html(this.label);
     },
         //this.label.set_text("");
 
@@ -134,6 +136,11 @@ TTTGUI.prototype = {
         }
     },
 
+    //Draws a line to indicate who won the game
+    drawline: function(){
+
+    },
+
     /*
     Make human move.
     */
@@ -180,15 +187,27 @@ TTTGUI.prototype = {
             this.label = "It's a tie!";
         } else {
           if (winner == PLAYERX){
+            /*var firstPoint = this.get_coords_from_grid(this.board.playerxmoves[0][0], this.board.playerxmoves[0][1]),
+                secondPoint = this.get_coords_from_grid(this.board.playerxmoves[this.board.playerxmoves.length - 1][0], this.board.playerxmoves[this.board.playerxmoves.length - 1][1]);
+            */
             this.label = "X Wins!";
           } else {
             if (winner == PLAYERO){
+              /*Revisar a los vecinos para encontrar el punto hacia donde se dibujará la linea
+              var firstPoint = this.get_coords_from_grid(this.board.playerymoves[0][0], this.board.playerymoves[0][1]),
+                  secondPoint = this.get_coords_from_grid(this.board.playerymoves[this.board.playerymoves.length - 1][0], this.board.playerymoves[this.board.playerymoves.length - 1][1]);
+              this.frame.beginPath();
+              this.frame.moveTo(firstPoint[0], firstPoint[1]);
+              this.frame.lineTo(secondPoint[0], secondPoint[1]);
+              this.frame.stroke();
+              this.frame.closePath();*/
               this.label = "O Wins!";
             }
           }
         }
 
         // Game is no longer in progress
+        $("#canvas").parents(".panel").find(".panel-footer").html(this.label);
         this.inprogress = false;
     },
 

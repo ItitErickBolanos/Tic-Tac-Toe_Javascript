@@ -14,6 +14,8 @@ function TTTBoard(dim, reverse = false, board = null){
 
     this.dim = dim;
     this.reverse = reverse;
+    this.playerxmoves = [];
+    this.playerymoves = [];
 
     var arr = [];
 
@@ -100,7 +102,7 @@ TTTBoard.prototype = {
         for(var i = 0; i < dim; i++){
             cols[i] = [];
             for(var j = 0; j < dim; j++){
-                cols[i][j] = board[i][j];
+                cols[i][j] = board[j][i];
             }
         }
 
@@ -131,8 +133,10 @@ TTTBoard.prototype = {
             if (setLine.size == 1 && lines[i][0] != EMPTY){
                 if (this.reverse){
                     return switch_player(lines[i][0]);
+                    console.log(lines[i]);
                 } else {
                     return lines[i][0];
+                    console.log(lines[i]);
                 }
             }
         }
@@ -160,7 +164,6 @@ Convenience function to switch players.
 Returns other player.
 */
 function switch_player(player){
-
     if (player == PLAYERX) {
         return PLAYERO;
     } else {
