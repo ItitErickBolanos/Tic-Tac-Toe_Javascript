@@ -44,7 +44,10 @@ TTTGUI.prototype = {
         });
 
         $("#canvas").parent().append("<div class='row'><button id='new_game' class='btn btn-warning'>New game</button></div>");
-        $("#new_game").click(function(){
+        $("#new_game, #play_again").click(function(){
+            if($(this).attr("id") == "play_again") {
+              $('#myModal').modal('toggle');
+            }
             that.newgame();
         });
         //this.label = this.frame.add_label("");
@@ -207,7 +210,8 @@ TTTGUI.prototype = {
         }
 
         // Game is no longer in progress
-        $("#canvas").parents(".panel").find(".panel-footer").html(this.label);
+        $("#label").html(this.label);
+        $('#myModal').modal('toggle');
         this.inprogress = false;
     },
 
