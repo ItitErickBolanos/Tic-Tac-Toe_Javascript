@@ -28,7 +28,7 @@ function mm_move(board, player){
             scores[1].push(empty_squares[i]);
         }
     }
-    
+
     if (player == PLAYERX) {
         minimax = [Math.max(...scores[0]), scores[1][scores[0].indexOf(Math.max(...scores[0]))]];
     } else {

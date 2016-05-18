@@ -40,7 +40,10 @@ TTTGUI.prototype = {
 
         // Set handlers
         $("#canvas").mousedown(function(event){
-          that.click([event.clientX - $(this).offset().left, event.clientY - $(this).offset().top]);
+            /*console.log(event);
+            console.log(event.pageY);
+            console.log(event.screenY);*/
+            that.click([event.clientX - $(this).offset().left, event.pageY - $(this).offset().top]);
         });
 
         $("#canvas").parent().append("<div class='row'><button id='new_game' class='btn btn-warning'>New game</button></div>");
@@ -61,9 +64,9 @@ TTTGUI.prototype = {
         this.inprogress = true;
         this.wait = false;
         this.turn = PLAYERX;
-        this.label = "Game in progress";
+        //this.label = "Game in progress";
         this.frame.clearRect(0, 0, $("#canvas").attr("width"), $("#canvas").attr("height"));
-        $("#canvas").parents(".panel").find(".panel-footer").html(this.label);
+        //$("#canvas").parents(".panel").find(".panel-footer").html(this.label);
     },
         //this.label.set_text("");
 
