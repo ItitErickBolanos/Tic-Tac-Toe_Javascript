@@ -1,0 +1,23 @@
+.container {
+    margin-top: 50px;
+}
+
+.modal-content {
+    padding: 10px;
+}
+
+.modal-header, .panel-default .panel-heading {
+    background-color: #4DB6AC;
+    color: white;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: center;
+}
+
+.modal-body, .panel-body{
+    background-color: #B2DFDB;
+    text-align: center;
+}
+
+#canvas {
+    background-color: white;
+}

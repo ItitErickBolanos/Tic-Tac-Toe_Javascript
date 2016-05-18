@@ -10,19 +10,17 @@
         <link href="css/tic-tac-toe.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container" ng-app="TicTacToe" style="margin-top: 100px">
+        <div class="container" ng-app="TicTacToe">
             <div class="row" ng-controller="TTTController">
-                <div class="col-md-5 col-md-offset-3">
-                    <div class="panel panel-primary">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-default">
                       <div class="panel-heading">
-                        <h3 class="panel-title">Tic Tac Toe</h3>
+                        <h2 class="panel-title"><strong>Tic Tac Toe</strong></h2>
                       </div>
                       <div class="panel-body" align="center">
                           <!--Here we draw the game-->
                           <canvas id="canvas" width="400" height="400" style="border: 1px solid">
                           </canvas>
-                      </div>
-                      <div class="panel-footer">
                       </div>
                     </div>
                 </div>
@@ -33,31 +31,33 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Result</h4>
               </div>
               <div class="modal-body" id="label">
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="play_again">Play again</button>
+                <button type="button" class="btn btn-success" id="play_again">Play again</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!--div class="modal fade" id="choosePlayer" tabindex="-1" role="dialog" aria-labelledby="choosePlayerLabel">
+        <div class="modal fade" id="choosePlayer" tabindex="-1" role="dialog" aria-labelledby="choosePlayerLabel">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-              <div class="modal-body" id="label" style="text-align: center">
-                  <strong>X OR O</strong>
+                <div class="modal-header">
+                  <h4 class="modal-title" id="choosePlayerLabel">Tic Tac Toe</h4>
+                </div>
+              <div class="modal-body" id="label">
+                  <strong>Play as X or O?</strong>
               </div>
               <div class="modal-footer" style="text-align: center">
-                  <button type="button" class="btn btn-primary" id="choose_x" playervalue="2">X</button>
-                  <button type="button" class="btn btn-primary" id="choose_o" playervalue="3">O</button>
+                  <button type="button" class="btn btn-success" id="choose_x" playervalue="3">X</button>
+                  <button type="button" class="btn btn-danger" id="choose_o" playervalue="2">O</button>
               </div>
             </div>
           </div>
-      </div-->
+        </div>
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <!--script type="text/javascript" src="https://use.fontawesome.com/ad4a96e219.js"></script-->

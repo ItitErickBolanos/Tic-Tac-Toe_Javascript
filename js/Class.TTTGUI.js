@@ -3,7 +3,7 @@ var GUI_WIDTH = 400,
     BAR_WIDTH = 5;
 
 /*GUI for Tic Tac Toe game.*/
-function TTTGUI(size, aiplayer, aifunction, ntrials, reverse=False){
+function TTTGUI(size, aiplayer, aifunction, ntrials, reverse = false){
     // Game board
     this.size = size;
     this.bar_spacing = Math.floor(GUI_WIDTH / this.size);
@@ -35,7 +35,7 @@ TTTGUI.prototype = {
         var FPS = 30;
         setInterval(function() {
           that.draw();
-      }, 1000/FPS);
+        }, 1000/FPS);
 
 
         // Set handlers
@@ -46,7 +46,7 @@ TTTGUI.prototype = {
             that.click([event.clientX - $(this).offset().left, event.pageY - $(this).offset().top]);
         });
 
-        $("#canvas").parent().append("<div class='row'><button id='new_game' class='btn btn-warning'>New game</button></div>");
+        $("#canvas").parent().append("<div class='row'><button id='new_game' class='btn btn-success'>New game</button></div>");
         $("#new_game, #play_again").click(function(){
             if($(this).attr("id") == "play_again") {
               $('#myModal').modal('toggle');

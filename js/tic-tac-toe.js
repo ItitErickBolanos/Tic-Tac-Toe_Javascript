@@ -1,14 +1,24 @@
+//Default scores if the selected player is X
 var SCORES = {
               2: 1,
-              4: 0,
-              3: -1
-             };
+              3: -1,
+              4: 0
+          };
+
 
 var app = angular.module("TicTacToe", []);
 
 app.controller("TTTController", ['$scope', function($scope){
-    var ticTacGUI = new TTTGUI(3, PLAYERO, move_wrapper, 1, false);
-    var board = new TTTBoard(3);
+
+    $("#choosePlayer").modal("toggle");
+
+    $("#choose_x, #choose_o").click(function(){
+        $("#choosePlayer").modal("toggle");
+        var selectedPlayer = $(this).attr("playervalue"),
+            ticTacGUI = new TTTGUI(3, parseInt(selectedPlayer), move_wrapper, 1, false),
+            board = new TTTBoard(3);
+    });
+
 }]);
 
 function mm_move(board, player){
