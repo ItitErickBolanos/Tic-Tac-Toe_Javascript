@@ -65,6 +65,7 @@ TTTGUI.prototype = {
         this.wait = false;
         this.turn = PLAYERX;
         //this.label = "Game in progress";
+
         this.frame.clearRect(0, 0, $("#canvas").attr("width"), $("#canvas").attr("height"));
         //$("#canvas").parents(".panel").find(".panel-footer").html(this.label);
     },
@@ -92,9 +93,10 @@ TTTGUI.prototype = {
     Draw an O on the given canvas at the given position.
     */
     drawo: function(pos){
+        var radius = GUI_WIDTH == 400 ? 50 : 40;
         halfsize = .4 * this.bar_spacing;
         this.frame.beginPath();
-        this.frame.arc(pos[0], pos[1], 50, 0, 2*Math.PI);
+        this.frame.arc(pos[0], pos[1], radius, 0, 2*Math.PI);
         this.frame.stroke();
         this.frame.closePath();
     },
@@ -103,7 +105,16 @@ TTTGUI.prototype = {
     Updates the tic-tac-toe GUI.
     */
     draw: function(){
+        GUI_WIDTH = GUI_HEIGHT = $(document).width() > 800 ? 400 : 300;
+        this.bar_spacing = Math.floor(GUI_WIDTH / this.size);
+
+        $("#canvas").attr({
+            "width" : GUI_WIDTH,
+            "height" : GUI_HEIGHT
+        });
+
         // Draw the '#' symbol
+
         for (var i = this.bar_spacing; i < GUI_WIDTH - 1; i += this.bar_spacing){
 
             this.frame.beginPath();
