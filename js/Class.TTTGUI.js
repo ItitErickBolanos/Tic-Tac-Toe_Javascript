@@ -40,20 +40,17 @@ TTTGUI.prototype = {
 
         // Set handlers
         $("#canvas").mousedown(function(event){
-            /*console.log(event);
-            console.log(event.pageY);
-            console.log(event.screenY);*/
             that.click([event.clientX - $(this).offset().left, event.pageY - $(this).offset().top]);
         });
 
         $("#canvas").parent().append("<div class='row'><button id='new_game' class='btn btn-success'>New game</button></div>");
+
         $("#new_game, #play_again").click(function(){
             if($(this).attr("id") == "play_again") {
               $('#myModal').modal('toggle');
             }
             that.newgame();
         });
-        //this.label = this.frame.add_label("");
     },
 
     /*
@@ -64,12 +61,9 @@ TTTGUI.prototype = {
         this.inprogress = true;
         this.wait = false;
         this.turn = PLAYERX;
-        //this.label = "Game in progress";
 
         this.frame.clearRect(0, 0, $("#canvas").attr("width"), $("#canvas").attr("height"));
-        //$("#canvas").parents(".panel").find(".panel-footer").html(this.label);
     },
-        //this.label.set_text("");
 
     /*
     Draw an X on the given canvas at the given position.
@@ -153,17 +147,10 @@ TTTGUI.prototype = {
         }
     },
 
-    //Draws a line to indicate who won the game
-    drawline: function(){
-
-    },
-
     /*
     Make human move.
     */
     click: function(position){
-      /*x -= canvas.offsetLeft;
-      y -= canvas.offsetTop;¨*/
       if (this.inprogress && (this.turn == this.humanplayer)){
           pos = this.get_grid_from_coords(position);
           if (this.board.square(pos[0], pos[1]) == EMPTY){
@@ -186,11 +173,11 @@ TTTGUI.prototype = {
             pos = this.aifunction(this.board, this.aiplayer, this.ntrials);
             if (this.board.square(pos[0], pos[1]) == EMPTY){
                 this.board.move(pos[0], pos[1], this.aiplayer);
-            }
-            this.turn = this.humanplayer;
-            winner = this.board.check_win();
-            if (winner != null){
-                this.game_over(winner);
+                this.turn = this.humanplayer;
+                winner = this.board.check_win();
+                if (winner != null){
+                    this.game_over(winner);
+                }
             }
         }
     },
